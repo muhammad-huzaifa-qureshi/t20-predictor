@@ -10,6 +10,9 @@
     --color-notice-bg: #fff4d6;
     --color-notice-text: #5c4400;
     --color-error: #b42318;
+    --color-positive: #1a7f4b;
+    --color-negative: var(--color-error);
+    --color-track: #e6e9ef;
     --radius: 8px;
     --space-1: 8px;
     --space-2: 16px;

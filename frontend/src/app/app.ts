@@ -20,6 +20,18 @@ export class App {
   readonly loading = signal(false);
   readonly error = signal('');
   readonly result = signal<PredictionResponse | null>(null);
+
+  // Helpers for the win probability bar and the "Why this prediction?" bars.
+  readonly maxImpact = computed(() =>
+    Math.max(0.1, ...(this.result()?.contributions ?? []).map((c) => Math.abs(c.value))),
+  );
+  readonly defendingPct = computed(
+    () => Math.round((100 - (this.result()?.prediction ?? 0)) * 10) / 10,
+  );
+
+  barWidth(value: number): number {
+    return (Math.abs(value) / this.maxImpact()) * 100;
+  }
   values: Record<string, number | null> = {};
   select(kind: ModelKind): void {
     this.activeKind.set(kind);

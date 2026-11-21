@@ -1,9 +1,8 @@
 <main class="page">
   <header class="page-header">
-    <h1>T20 Performance Predictor</h1>
-    <p>Angular frontend, Flask API and XGBoost models.</p>
-    <p>By 231975 (Huzaifa Qureshi)</p>
-    <p>Enter the stats of a finished innings or spell. The model returns the matching runs.</p>
+    <h1>T20 Performance &amp; Win Predictor</h1>
+    <p>Predict batting scores, bowling figures, and chase win probabilities using XGBoost and SHAP explainability.</p>
+    <p>By Huzaifa Qureshi (231975) &bull; Built with Angular &amp; Flask</p>
   </header>
 
   @if (!isLocal) {
@@ -51,8 +50,42 @@
   @if (result(); as r) {
   <section class="card result" aria-live="polite">
     <h2>Result</h2>
-    <p class="value">{{ r.prediction }}</p>
-    <p>Estimated {{ r.target }} for the stats you entered</p>
+    <p class="value">{{ r.prediction }}<span class="unit">{{ r.unit }}</span></p>
+    <p>Predicted {{ r.target }} ({{ r.model }} model)</p>
+
+    @if (r.model === 'win') {
+      <div class="winbar" role="img" [attr.aria-label]="'Chasing team ' + r.prediction + ' percent'">
+        <div class="winbar-fill" [style.width.%]="r.prediction"></div>
+      </div>
+      <div class="winbar-labels">
+        <span>Chasing team {{ r.prediction }}%</span>
+        <span>Defending team {{ defendingPct() }}%</span>
+      </div>
+    }
+  </section>
+
+  <section class="card" aria-live="polite">
+    <h2>Why this prediction?</h2>
+    <p class="muted">
+      An average case gives {{ r.base }}{{ r.unit === '%' ? '%' : ' ' + r.unit }}. Each bar shows how far one input pushed
+      this result up (green) or down (red).
+    </p>
+    <ul class="bars">
+      @for (c of r.contributions; track c.label) {
+        <li class="bar-row">
+          <span class="bar-label">{{ c.label }} ({{ c.input }})</span>
+          <span class="bar-track">
+            <span
+              class="bar-fill"
+              [class.up]="c.value >= 0"
+              [class.down]="c.value < 0"
+              [style.width.%]="barWidth(c.value)"
+            ></span>
+          </span>
+          <span class="bar-value">{{ c.value > 0 ? '+' : '' }}{{ c.value }}</span>
+        </li>
+      }
+    </ul>
   </section>
   }
 </main>

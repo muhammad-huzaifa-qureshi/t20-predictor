@@ -120,3 +120,77 @@
     cursor: pointer;
     text-decoration: underline;
 }
+
+.unit {
+  margin-left: var(--space-1);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-muted);
+}
+
+.winbar {
+  height: 14px;
+  margin-top: var(--space-2);
+  border-radius: var(--radius);
+  background: var(--color-track);
+  overflow: hidden;
+}
+
+.winbar-fill {
+  height: 100%;
+  background: var(--color-primary);
+}
+
+.winbar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: var(--space-1);
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.muted {
+  margin: 0 0 var(--space-2);
+  color: var(--color-muted);
+}
+
+.bars {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(96px, 190px) 1fr 52px;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.bar-track {
+  height: 12px;
+  border-radius: var(--radius);
+  background: var(--color-track);
+  overflow: hidden;
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+}
+
+.bar-fill.up {
+  background: var(--color-positive);
+}
+
+.bar-fill.down {
+  background: var(--color-negative);
+}
+
+.bar-value {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
