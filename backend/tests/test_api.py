@@ -21,6 +21,9 @@ BOWLING = {
     "economy": 8,
 }
 
+WIN = {"target": 180, "score": 95, "wickets": 2, "balls_bowled": 66}
+
+
 
 def test_health():
     response = client.get("/health")
@@ -73,3 +76,18 @@ def test_unknown_model_returns_404():
     response = client.post("/predict/fielding", json=BATTING)
 
     assert response.status_code == 404
+
+def test_win_prediction_and_explanation():
+    response = client.post("/predict/win", json=WIN)
+    assert response.status_code == 200
+    body = response.get_json()
+    assert body["unit"] == "%"
+    assert 0 <= body["prediction"] <= 100
+    # base value plus the contributions rebuilds the prediction (rounding allowed)
+    total = body["base"] + sum(c["value"] for c in body["contributions"])
+    assert abs(total - body["prediction"]) < 0.5
+
+
+def test_win_score_at_target_returns_400():
+    response = client.post("/predict/win", json={**WIN, "score": 180})
+    assert response.status_code == 400
