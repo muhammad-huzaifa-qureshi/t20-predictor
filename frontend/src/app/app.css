@@ -26,7 +26,7 @@
 .site-kicker {
   font-size: 0.8125rem;
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: #1a1a1a;
 }
 
 .site-title {
@@ -42,7 +42,7 @@
   margin: 4px 0 0;
   font-size: 0.9375rem;
   line-height: 1.5;
-  color: var(--color-text-secondary);
+  color: #1e1e1e;
   max-width: 680px;
 }
 
@@ -123,10 +123,12 @@
 /* Panels */
 .card,
 .panel {
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 24px rgba(16, 24, 40, 0.10), 0 1px 4px rgba(16, 24, 40, 0.06);
   padding: 24px;
 }
 
@@ -579,21 +581,21 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  color: var(--color-text-secondary);
+  color: #1a1a1a;
 }
 
 .footer-meta strong {
-  color: var(--color-text-primary);
+  color: #111111;
   font-weight: 600;
 }
 
 .footer-sep {
-  color: var(--color-border-hover);
+  color: #888;
 }
 
 .footer-copyright {
   font-size: 0.75rem;
-  color: var(--color-text-muted);
+  color: #333333;
 }
 
 /* Mobile & Tablet Responsiveness */
