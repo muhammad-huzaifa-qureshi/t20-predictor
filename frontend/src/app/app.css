@@ -8,8 +8,6 @@
 
 /* Masthead Header */
 .app-masthead {
-  border-bottom: 1px solid var(--color-border);
-  padding-bottom: 24px;
   margin-bottom: 24px;
 }
 
