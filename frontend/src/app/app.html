@@ -1,91 +1,227 @@
-<main class="page">
-  <header class="page-header">
-    <h1>T20 Performance &amp; Win Predictor</h1>
-    <p>Predict batting scores, bowling figures, and chase win probabilities using XGBoost and SHAP explainability.</p>
-    <p>By Huzaifa Qureshi (231975) &bull; Built with Angular &amp; Flask</p>
+<div class="layout-container">
+  <!-- Classic Masthead Header -->
+  <header class="app-masthead">
+    <div class="masthead-main">
+      <div class="header-titles">
+        <h1 class="site-title">T20 Performance &amp; Win Predictor</h1>
+        <p class="site-description">
+          Empirical machine learning models for batting performance, bowling spells, and second-innings chase win probability calibrated on international T20 cricket data.
+        </p>
+      </div>
+      <div class="header-meta">
+        <span class="meta-label">Project by</span>
+        <span class="meta-author">Huzaifa Qureshi (231975)</span>
+        <span class="meta-sep">&bull;</span>
+        <span class="meta-tech">Angular &amp; Flask API</span>
+      </div>
+    </div>
   </header>
 
   @if (!isLocal) {
-  <aside class="notice" role="status">
-    Static GitHub Pages demo. Predictions need the Flask backend running on
-    your own computer.
-  </aside>
+    <aside class="notice banner-alert" role="status">
+      <span class="alert-tag">Demo Mode</span>
+      <span class="alert-message">
+        Static GitHub Pages preview. Live predictions require the Flask API running locally on port 5000.
+      </span>
+    </aside>
   }
 
-  <nav class="tabs" aria-label="Model type">
-    @for (model of models; track model.kind) {
-    <button type="button" class="tab" [class.active]="model.kind === activeKind()" (click)="select(model.kind)">
-      {{ model.title }}
-    </button>
-    }
+  <!-- Sports Navigation Tab Bar -->
+  <nav class="nav-section" aria-label="Model Selection">
+    <div class="tabs model-tabs">
+      @for (model of models; track model.kind) {
+        <button
+          type="button"
+          class="tab tab-item"
+          [class.active]="model.kind === activeKind()"
+          (click)="select(model.kind)"
+          [attr.aria-selected]="model.kind === activeKind()"
+        >
+          <span class="tab-label">{{ model.title }}</span>
+        </button>
+      }
+    </div>
   </nav>
 
-  <form class="card" (ngSubmit)="submit()">
-    <h2>Predict {{ active().target }}</h2>
-    <p class="intro">{{ active().intro }}</p>
+  <!-- Main Analytics Workspace Grid -->
+  <main class="analytics-workspace">
+    <!-- Left Column: Input Form Panel -->
+    <section class="card panel input-panel" aria-labelledby="form-panel-title">
+      <form (ngSubmit)="submit()">
+        <div class="panel-heading-row">
+          <div>
+            <h2 id="form-panel-title" class="panel-heading">
+              {{ active().title }}
+            </h2>
+            @if (active().intro) {
+              <p class="intro panel-intro">{{ active().intro }}</p>
+            }
+          </div>
+          <button
+            type="button"
+            class="link btn-load-sample"
+            (click)="fillExample()"
+            title="Load sample match figures"
+          >
+            Load sample data
+          </button>
+        </div>
 
-    <div class="grid">
-      @for (field of active().fields; track field.key) {
-      <label class="field">
-        <span>{{ field.label }}</span>
-        <input type="number" [name]="field.key" [min]="field.min" [max]="field.max" [step]="field.step"
-          [(ngModel)]="values[field.key]" />
-        <small class="hint">{{ field.hint }}</small>
-      </label>
-      }
-    </div>
+        <div class="grid fields-grid">
+          @for (field of active().fields; track field.key) {
+            <div class="field form-field">
+              <label [for]="field.key" class="field-label">
+                {{ field.label }}
+              </label>
+              <div class="input-wrapper">
+                <input
+                  type="number"
+                  [id]="field.key"
+                  [name]="field.key"
+                  [min]="field.min"
+                  [max]="field.max"
+                  [step]="field.step"
+                  [(ngModel)]="values[field.key]"
+                  [placeholder]="field.min + ' - ' + field.max"
+                  class="form-input"
+                />
+              </div>
+              @if (field.hint) {
+                <span class="hint field-hint">{{ field.hint }}</span>
+              }
+            </div>
+          }
+        </div>
 
-    <div class="actions">
-      <button type="submit" class="primary" [disabled]="loading() || !isLocal">
-        {{ loading() ? 'Predicting' : 'Predict' }}
-      </button>
-      <button type="button" class="link" (click)="fillExample()">Fill example</button>
-    </div>
-  </form>
+        @if (error()) {
+          <div class="error form-error-alert" role="alert">
+            <span class="error-text">{{ error() }}</span>
+          </div>
+        }
 
-  @if (error()) {
-  <p class="error" role="alert">{{ error() }}</p>
-  }
+        <div class="actions form-actions">
+          <button
+            type="submit"
+            class="primary btn-calculate"
+            [disabled]="loading() || !isLocal"
+          >
+            @if (loading()) {
+              <span>Calculating prediction...</span>
+            } @else {
+              <span>Calculate {{ active().target }}</span>
+            }
+          </button>
+        </div>
+      </form>
+    </section>
 
-  @if (result(); as r) {
-  <section class="card result" aria-live="polite">
-    <h2>Result</h2>
-    <p class="value">{{ r.prediction }}<span class="unit">{{ r.unit }}</span></p>
-    <p>Predicted {{ r.target }} ({{ r.model }} model)</p>
-
-    @if (r.model === 'win') {
-      <div class="winbar" role="img" [attr.aria-label]="'Chasing team ' + r.prediction + ' percent'">
-        <div class="winbar-fill" [style.width.%]="r.prediction"></div>
+    <!-- Right Column: Results & Explanation Panel -->
+    <section class="card panel output-panel" aria-labelledby="output-panel-title">
+      <div class="panel-heading-row">
+        <h2 id="output-panel-title" class="panel-heading">Prediction Output</h2>
+        @if (result(); as r) {
+          <span class="model-type-badge">{{ r.model }} model</span>
+        }
       </div>
-      <div class="winbar-labels">
-        <span>Chasing team {{ r.prediction }}%</span>
-        <span>Defending team {{ defendingPct() }}%</span>
-      </div>
-    }
-  </section>
 
-  <section class="card" aria-live="polite">
-    <h2>Why this prediction?</h2>
-    <p class="muted">
-      An average case gives {{ r.base }}{{ r.unit === '%' ? '%' : ' ' + r.unit }}. Each bar shows how far one input pushed
-      this result up (green) or down (red).
-    </p>
-    <ul class="bars">
-      @for (c of r.contributions; track c.label) {
-        <li class="bar-row">
-          <span class="bar-label">{{ c.label }} ({{ c.input }})</span>
-          <span class="bar-track">
-            <span
-              class="bar-fill"
-              [class.up]="c.value >= 0"
-              [class.down]="c.value < 0"
-              [style.width.%]="barWidth(c.value)"
-            ></span>
-          </span>
-          <span class="bar-value">{{ c.value > 0 ? '+' : '' }}{{ c.value }}</span>
-        </li>
+      @if (result(); as r) {
+        <div class="result result-summary-box" aria-live="polite">
+          <div class="primary-metric">
+            <span class="metric-caption">Predicted {{ r.target }}</span>
+            <div class="metric-figure">
+              <span class="value metric-number">{{ r.prediction }}</span>
+              <span class="unit metric-unit">{{ r.unit }}</span>
+            </div>
+          </div>
+
+          @if (r.model === 'win') {
+            <!-- Cricinfo/Statsguru-style Chase Win Split Bar -->
+            <div class="win-probability-section">
+              <div class="winbar-labels win-split-labels">
+                <div class="win-team-stat chasing">
+                  <span class="team-role">Chasing Team</span>
+                  <span class="team-pct">{{ r.prediction }}%</span>
+                </div>
+                <div class="win-team-stat defending">
+                  <span class="team-role">Defending Team</span>
+                  <span class="team-pct">{{ defendingPct() }}%</span>
+                </div>
+              </div>
+
+              <div
+                class="winbar win-bar-track"
+                role="progressbar"
+                [attr.aria-valuenow]="r.prediction"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                [attr.aria-label]="'Chasing ' + r.prediction + '%, Defending ' + defendingPct() + '%'"
+              >
+                <div class="winbar-fill win-bar-fill-chasing" [style.width.%]="r.prediction"></div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- SHAP Model Explanation -->
+        <div class="explanation-box" aria-live="polite">
+          <div class="explanation-heading-row">
+            <h3 class="explanation-title">Why this prediction?</h3>
+            <span class="baseline-reference">
+              Baseline average: <strong>{{ r.base }}{{ r.unit === '%' ? '%' : ' ' + r.unit }}</strong>
+            </span>
+          </div>
+
+          <p class="muted explanation-summary">
+            An average case gives {{ r.base }}{{ r.unit === '%' ? '%' : ' ' + r.unit }}. Each bar shows how far one input pushed this result up (green) or down (red).
+          </p>
+
+          <div class="contributions-container">
+            <ul class="bars contributions-list">
+              @for (c of r.contributions; track c.label) {
+                <li class="bar-row contribution-item">
+                  <div class="bar-label-group">
+                    <span class="bar-label feature-name">{{ c.label }}</span>
+                    <span class="feature-value">({{ c.input }})</span>
+                  </div>
+                  <div class="bar-track contribution-track">
+                    <span
+                      class="bar-fill contribution-fill"
+                      [class.up]="c.value >= 0"
+                      [class.down]="c.value < 0"
+                      [style.width.%]="barWidth(c.value)"
+                    ></span>
+                  </div>
+                  <span
+                    class="bar-value contribution-val"
+                    [class.val-up]="c.value >= 0"
+                    [class.val-down]="c.value < 0"
+                  >
+                    {{ c.value > 0 ? '+' : '' }}{{ c.value }}
+                  </span>
+                </li>
+              }
+            </ul>
+          </div>
+        </div>
+      } @else {
+        <!-- Informative Analytics Empty State -->
+        <div class="empty-output-state">
+          <p class="empty-title">No Prediction Calculated Yet</p>
+          <p class="empty-text">
+            Enter match parameters on the left and click <strong>Calculate</strong> to evaluate the model's estimate and see the feature impact analysis.
+          </p>
+        </div>
       }
-    </ul>
-  </section>
-  }
-</main>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <div class="footer-content">
+      <span>T20 Performance &amp; Match Outcome Analytics</span>
+      <span class="footer-sep">&bull;</span>
+      <span>Huzaifa Qureshi (231975)</span>
+      <span class="footer-sep">&bull;</span>
+      <span>XGBoost + SHAP Explainability</span>
+    </div>
+  </footer>
+</div>

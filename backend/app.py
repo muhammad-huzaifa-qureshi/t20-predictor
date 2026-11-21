@@ -10,47 +10,9 @@ from xgboost import XGBClassifier, XGBRegressor
 
 
 
-MODEL_DIR = Path(__file__).resolve().parent / "models"
+from constants import SPECS
 
-# API field -> (training column name, minimum, maximum).
-# The order inside each "inputs" dict must match the training column order.
-SPECS = {
-    "batting": {
-        "file": "batting_model.json",
-        "target": "Runs",
-        "inputs": {
-            "balls": ("Balls", 1, 120),
-            "fours": ("Fours", 0, 60),
-            "sixes": ("Sixes", 0, 60),
-            "strike_rate": ("Strike Rate", 0, 720),
-        },
-    },
-    "bowling": {
-        "file": "bowling_model.json",
-        "target": "Conceded",
-        "inputs": {
-            "fours": ("Fours", 0, 24),
-            "sixes": ("Sixers", 0, 24),
-            "balls": ("Balls", 1, 24),
-            "economy": ("Economy", 0, 60),
-        },
-    },
-    # Chase win probability. The four inputs are turned into the five model
-    # features by chase_features() below. "task" and "unit" are optional and
-    # default to a regressor measured in runs.
-    "win": {
-        "file": "win_model.json",
-        "target": "Win probability",
-        "task": "classifier",
-        "unit": "%",
-        "inputs": {
-            "target": ("Target Score", 1, 350),
-            "score": ("Innings Runs", 0, 349),
-            "wickets": ("Innings Wickets", 0, 9),
-            "balls_bowled": ("Balls Bowled", 0, 119),
-        },
-    },
-}
+MODEL_DIR = Path(__file__).resolve().parent / "models"
 
 
 

@@ -1,3 +1,5 @@
+import { MODEL_RANGES } from './constants';
+
 export type ModelKind = 'batting' | 'bowling' | 'win';
 
 export interface FieldSpec {
@@ -20,44 +22,45 @@ export interface ModelSpec {
 
 export const MODELS: ModelSpec[] = [
     {
-        kind: 'batting',
-        title: 'Batting',
-        target: 'Runs',
+        kind: 'win',
+        title: 'Chase Win Probability',
+        target: 'Win Probability',
         intro:
-            'Enter the stats of a completed innings. The model returns the runs that usually go with them.',
+            'Calculate second-innings chase win probability using the target score and current match state.',
+        example: { target: 180, score: 95, wickets: 2, balls_bowled: 66 },
+        fields: [
+            { key: 'target', label: 'Target score', hint: MODEL_RANGES.win.target.hint, min: MODEL_RANGES.win.target.min, max: MODEL_RANGES.win.target.max, step: MODEL_RANGES.win.target.step },
+            { key: 'score', label: 'Current score', hint: MODEL_RANGES.win.score.hint, min: MODEL_RANGES.win.score.min, max: MODEL_RANGES.win.score.max, step: MODEL_RANGES.win.score.step },
+            { key: 'wickets', label: 'Wickets lost', hint: MODEL_RANGES.win.wickets.hint, min: MODEL_RANGES.win.wickets.min, max: MODEL_RANGES.win.wickets.max, step: MODEL_RANGES.win.wickets.step },
+            { key: 'balls_bowled', label: 'Balls bowled', hint: MODEL_RANGES.win.balls_bowled.hint, min: MODEL_RANGES.win.balls_bowled.min, max: MODEL_RANGES.win.balls_bowled.max, step: MODEL_RANGES.win.balls_bowled.step },
+        ],
+    },
+    {
+        kind: 'batting',
+        title: 'Batting Performance',
+        target: 'Batting Runs',
+        intro:
+            'Predict total innings runs based on balls faced, boundaries hit, and batting strike rate.',
         example: { balls: 20, fours: 3, sixes: 2, strike_rate: 150 },
         fields: [
-            { key: 'balls', label: 'Balls faced', hint: 'Balls the batter faced', min: 1, max: 120, step: 1 },
-            { key: 'fours', label: 'Fours', hint: 'Number of fours hit', min: 0, max: 60, step: 1 },
-            { key: 'sixes', label: 'Sixes', hint: 'Number of sixes hit', min: 0, max: 60, step: 1 },
-            { key: 'strike_rate', label: 'Strike rate', hint: 'Runs ÷ balls × 100', min: 0, max: 720, step: 0.01 },
+            { key: 'balls', label: 'Balls faced', hint: MODEL_RANGES.batting.balls.hint, min: MODEL_RANGES.batting.balls.min, max: MODEL_RANGES.batting.balls.max, step: MODEL_RANGES.batting.balls.step },
+            { key: 'fours', label: 'Fours hit', hint: MODEL_RANGES.batting.fours.hint, min: MODEL_RANGES.batting.fours.min, max: MODEL_RANGES.batting.fours.max, step: MODEL_RANGES.batting.fours.step },
+            { key: 'sixes', label: 'Sixes hit', hint: MODEL_RANGES.batting.sixes.hint, min: MODEL_RANGES.batting.sixes.min, max: MODEL_RANGES.batting.sixes.max, step: MODEL_RANGES.batting.sixes.step },
+            { key: 'strike_rate', label: 'Strike rate', hint: MODEL_RANGES.batting.strike_rate.hint, min: MODEL_RANGES.batting.strike_rate.min, max: MODEL_RANGES.batting.strike_rate.max, step: MODEL_RANGES.batting.strike_rate.step },
         ],
     },
     {
         kind: 'bowling',
-        title: 'Bowling',
-        target: 'Runs conceded',
+        title: 'Bowling Spell',
+        target: 'Runs Conceded',
         intro:
-            'Enter the figures of a completed spell. The model returns the runs conceded that usually go with them.',
+            'Predict total runs conceded based on spell length, boundaries conceded, and bowler economy.',
         example: { fours: 3, sixes: 1, balls: 24, economy: 8 },
         fields: [
-            { key: 'fours', label: 'Fours conceded', hint: 'Fours hit off the bowler', min: 0, max: 24, step: 1 },
-            { key: 'sixes', label: 'Sixes conceded', hint: 'Sixes hit off the bowler', min: 0, max: 24, step: 1 },
-            { key: 'balls', label: 'Balls bowled', hint: 'Up to 24 balls (4 overs)', min: 1, max: 24, step: 1 },
-            { key: 'economy', label: 'Economy rate', hint: 'Runs conceded per over', min: 0, max: 60, step: 0.01 },
-        ],
-    },
-    {
-        kind: 'win',
-        title: 'Win Probability',
-        target: 'Win Probability',
-        intro: 'Enter the match situation during a chase. The model calculates the batting team\'s win probability.',
-        example: { target: 180, score: 95, wickets: 2, balls_bowled: 66 },
-        fields: [
-            { key: 'target', label: 'Target score', hint: 'Runs needed to win + 1', min: 1, max: 350, step: 1 },
-            { key: 'score', label: 'Current score', hint: 'Runs scored so far in the chase', min: 0, max: 349, step: 1 },
-            { key: 'wickets', label: 'Wickets lost', hint: 'Wickets lost by chasing team (0-9)', min: 0, max: 9, step: 1 },
-            { key: 'balls_bowled', label: 'Balls bowled (Max. 120)', hint: 'Balls bowled so far in the chase', min: 0, max: 119, step: 1 },
+            { key: 'fours', label: 'Fours conceded', hint: MODEL_RANGES.bowling.fours.hint, min: MODEL_RANGES.bowling.fours.min, max: MODEL_RANGES.bowling.fours.max, step: MODEL_RANGES.bowling.fours.step },
+            { key: 'sixes', label: 'Sixes conceded', hint: MODEL_RANGES.bowling.sixes.hint, min: MODEL_RANGES.bowling.sixes.min, max: MODEL_RANGES.bowling.sixes.max, step: MODEL_RANGES.bowling.sixes.step },
+            { key: 'balls', label: 'Balls bowled', hint: MODEL_RANGES.bowling.balls.hint, min: MODEL_RANGES.bowling.balls.min, max: MODEL_RANGES.bowling.balls.max, step: MODEL_RANGES.bowling.balls.step },
+            { key: 'economy', label: 'Economy rate', hint: MODEL_RANGES.bowling.economy.hint, min: MODEL_RANGES.bowling.economy.min, max: MODEL_RANGES.bowling.economy.max, step: MODEL_RANGES.bowling.economy.step },
         ],
     },
 ];

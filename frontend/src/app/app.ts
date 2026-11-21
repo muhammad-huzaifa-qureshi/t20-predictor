@@ -15,7 +15,7 @@ export class App {
   private readonly api = inject(PredictionService);
   readonly models = MODELS;
   readonly isLocal = LOCAL_HOSTS.includes(window.location.hostname);
-  readonly activeKind = signal<ModelKind>('batting');
+  readonly activeKind = signal<ModelKind>('win');
   readonly active = computed(() => MODELS.find((m) => m.kind === this.activeKind())!);
   readonly loading = signal(false);
   readonly error = signal('');
