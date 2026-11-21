@@ -21,13 +21,13 @@ Machine learning models for international T20 cricket, served through a Flask AP
 
 ![Win probability prediction with chasing and defending team bar](screenshots/Win-Prediction.png)
 
-![Batting prediction result](screenshots/Batting-Prediction.png)
+![Batting prediction result](screenshots/Batting-Predict.png)
 
-![Bowling prediction result](screenshots/Bowling-Prediction.png)
+![Bowling prediction result](screenshots/Bowling-Predict.png)
 
 ## Dataset
 
-Ball by ball international T20 (IT20) data from Kaggle: [IT20 Cricket Data (2005 to 2023)](https://www.kaggle.com/datasets/jamiewelsh2/ball-by-ball-it20).
+Ball by ball international T20 (IT20) data from Kaggle: [IT20 Cricket Data (2003 to 2023)](https://www.kaggle.com/datasets/jamiewelsh2/ball-by-ball-it20).
 
 | Property | Value |
 | --- | --- |
@@ -314,8 +314,8 @@ t20-predictor/
 ├── screenshots/
 │   ├── First-View.png
 │   ├── Win-Prediction.png
-│   ├── Batting-Prediction.png
-│   └── Bowling-Prediction.png
+│   ├── Batting-Predict.png
+│   └── Bowling-Predict.png
 └── README.md
 ```
 
@@ -324,4 +324,4 @@ t20-predictor/
 H. M. D. Thilakarathne, "Predicting players' performance in T20 cricket matches using Machine Learning approaches," 2024.
 Paper included in `paper/Predicting_Players_Performacne.pdf`.
 
-Dataset: [Ball by Ball IT20 (2005 to 2023) on Kaggle](https://www.kaggle.com/datasets/jamiewelsh2/ball-by-ball-it20), stored locally as `dataset/ball_by_ball_it20.csv`.
+Dataset: [Ball by Ball IT20 (2003 to 2023) on Kaggle](https://www.kaggle.com/datasets/jamiewelsh2/ball-by-ball-it20), stored locally as `dataset/ball_by_ball_it20.csv`.

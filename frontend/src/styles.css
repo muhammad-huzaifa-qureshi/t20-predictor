@@ -76,9 +76,7 @@ body::before {
   z-index: -1;
   background:
     linear-gradient(rgba(245, 246, 248, 0.55), rgba(245, 246, 248, 0.55)),
-    url('/background.webp') center / cover no-repeat;
-  filter: blur(3px);
-  transform: scale(1.03);
+    url('../public/background.webp') center / cover no-repeat;
   filter: blur(3px);
   transform: scale(1.03);
   pointer-events: none;
