@@ -1,5 +1,6 @@
 # T20 Performance and Win Predictor
 Huzaifa Qureshi - 231975 - BSSE 7A
+Supervised by: Mr. Ali Pirzada
 
 [![CI](https://github.com/muhammad-huzaifa-qureshi/t20-predictor/actions/workflows/ci.yml/badge.svg)](https://github.com/muhammad-huzaifa-qureshi/t20-predictor/actions/workflows/ci.yml)
 [![Deploy to GitHub Pages](https://github.com/muhammad-huzaifa-qureshi/t20-predictor/actions/workflows/deploy.yml/badge.svg)](https://github.com/muhammad-huzaifa-qureshi/t20-predictor/actions/workflows/deploy.yml)
