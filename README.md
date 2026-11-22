@@ -26,6 +26,8 @@ Machine learning models for international T20 cricket, served through a Flask AP
 
 ![Bowling prediction result](screenshots/Bowling-Predict.png)
 
+![Mobile Responsive View](screenshots/Mobile-View.png)
+
 ## Dataset
 
 Ball by ball international T20 (IT20) data from Kaggle: [IT20 Cricket Data (2003 to 2023)](https://www.kaggle.com/datasets/jamiewelsh2/ball-by-ball-it20).
